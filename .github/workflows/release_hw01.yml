@@ -1,4 +1,4 @@
-name: 'Build `ip_filter` release package'
+name: 'Build `helloworld` release package'
 
 on:
   push:
