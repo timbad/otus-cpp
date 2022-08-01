@@ -48,7 +48,7 @@ if (MSVC)
     endif()
 else ()
     target_compile_options(ip_filter PRIVATE
-        -Wall -Wextra -pedantic -Wunused-parameter
+        -Wall -Wextra -pedantic -Werror
     )
     if(WITH_GTEST)
         target_compile_options(test_ip_filter PRIVATE
