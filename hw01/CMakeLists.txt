@@ -3,9 +3,9 @@ cmake_minimum_required(VERSION 3.12)
 set(PATCH_VERSION "1" CACHE INTERNAL "Patch version")
 set(PROJECT_VESRION 0.0.${PATCH_VERSION})
 
-project(helloworld VERSION ${PROJECT_VESRION})
+project(hw01 VERSION ${PROJECT_VESRION})
 
-include_directories(utils)
+include_directories(../utils)
 
 option(WITH_BOOST_TEST "Whether to build Boost test" ON)
 option(WITH_GTEST "Whether to build Google test" ON)
@@ -29,16 +29,19 @@ target_link_libraries(helloworld_cli PRIVATE
 )
 
 if(WITH_GTEST)
-    find_package(GTest REQUIRED)
+    set(GOOGLETEST_DIR ../utils/googletest)
+    add_subdirectory(${GOOGLETEST_DIR} build)
+
     add_executable(test_version_gtest test_version_gtest.cpp)
 
-    target_include_directories(test_version_gtest
-        PRIVATE ${GTEST_INCLUDE_DIRS}
+    target_include_directories(test_version_gtest PRIVATE
+        ${GOOGLETEST_DIR}/googletest/include
+        ${GOOGLETEST_DIR}/googlemock/include
     )
 
     target_link_libraries(
         test_version_gtest
-        ${GTEST_BOTH_LIBRARIES}
+        gtest gtest_main gmock gmock_main
         helloworld
     )
 endif()
@@ -111,12 +114,12 @@ include(CPack)
 
 if(WITH_BOOST_TEST OR WITH_GTEST)
     enable_testing()
-endif()
 
-if(WITH_BOOST_TEST)
-    add_test(test_version test_version)
-endif()
+    if(WITH_BOOST_TEST)
+        add_test(test_version test_version)
+    endif()
 
-if(WITH_GTEST)
-    add_test(test_version_gtest test_version_gtest)
+    if(WITH_GTEST)
+        add_test(test_version_gtest test_version_gtest)
+    endif()
 endif()
