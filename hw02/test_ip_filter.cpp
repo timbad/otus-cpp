@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "gmock/gmock.h"
+#include <gmock/gmock.h>
 #include "ip_filter.h"
 
 
@@ -25,6 +25,6 @@ TEST(IPFilterTest, DescendingOrder) {
     for (size_t i = 0; i < ip4_vec.size(); i++) {
         const auto& cur = ip4_vec[i];
         const auto& ref = ip4_vec_ref[i];
-        EXPECT_THAT(cur, ContainerEq(ref));
+        EXPECT_THAT(cur, testing::ContainerEq(ref));
     }
 }

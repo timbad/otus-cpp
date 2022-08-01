@@ -21,8 +21,8 @@ target_include_directories(ip_filter
 )
 
 if(WITH_GTEST)
-    set(GOOGLETEST_DIR ../utils/googletest build)
-    add_subdirectory(${GOOGLETEST_DIR})
+    set(GOOGLETEST_DIR ../utils/googletest)
+    add_subdirectory(${GOOGLETEST_DIR} build)
 
     add_executable(test_ip_filter test_ip_filter.cpp ip_filter.h)
 

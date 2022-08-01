@@ -55,7 +55,7 @@ uint32_t to_number(const ip4_t &ip4) {
     uint32_t addr = ip4[0] << 24;
     addr |= ip4[1] << 16;
     addr |= ip4[2] << 8;
-    addr |= ip4[0];
+    addr |= ip4[3];
     return addr;
 }
 
