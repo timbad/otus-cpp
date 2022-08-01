@@ -5,7 +5,7 @@ on:
     branches:
       - master
     paths:
-      - 'hw02'
+      - 'hw02/**'
 
 jobs:
   build:
