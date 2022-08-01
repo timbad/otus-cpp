@@ -1,4 +1,4 @@
-name: 'C++ CI'
+name: 'Build `ip_filter` release package'
 
 on:
   push:
@@ -6,6 +6,7 @@ on:
       - master
     paths:
       - 'hw01/**'
+  workflow_dispatch:
 
 jobs:
   build:
@@ -31,6 +32,7 @@ jobs:
           draft: false
           prerelease: false
           token: ${{ secrets.GITHUB_TOKEN }}
+          tag:  ${{ github.run_number }}
           allowUpdates: true
       - name: check files in repo
         run: |
