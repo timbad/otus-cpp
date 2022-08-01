@@ -1,66 +1,9 @@
-#include <cassert>
-#include <cstdlib>
+
+#include "ip_filter.h"
+
 #include <iostream>
 #include <string>
 #include <vector>
-#include <array>
-#include <algorithm>
-
-
-// ("",  '.') -> [""]
-// ("11", '.') -> ["11"]
-// ("..", '.') -> ["", "", ""]
-// ("11.", '.') -> ["11", ""]
-// (".11", '.') -> ["", "11"]
-// ("11.22", '.') -> ["11", "22"]
-std::vector<std::string> split(const std::string &str, const char d='.')
-{
-    std::vector<std::string> r;
-
-    std::string::size_type start = 0;
-    std::string::size_type stop = str.find_first_of(d);
-    while(stop != std::string::npos)
-    {
-        r.push_back(str.substr(start, stop - start));
-
-        start = stop + 1;
-        stop = str.find_first_of(d, start);
-    }
-
-    r.push_back(str.substr(start));
-
-    return r;
-}
-
-
-using ip4_t = std::array<int, 4>;
-using ip4_vec_t = std::vector<ip4_t>;
-
-std::ostream& operator<< (std::ostream &oss, const ip4_t& ip4)
-{
-    oss << std::to_string(ip4[0]) << "."
-        << std::to_string(ip4[1]) << "."
-        << std::to_string(ip4[2]) << "."
-        << std::to_string(ip4[3]);
-    return oss;
-}
-
-
-std::ostream& operator<< (std::ostream &oss, const ip4_vec_t& ip4_vec)
-{
-    for (const auto& ip4 : ip4_vec) {
-        oss << ip4 << std::endl;
-    }
-    return oss;
-}
-
-uint32_t to_number(const ip4_t& ip4) {
-    uint32_t addr = ip4[0] << 24;
-    addr |= ip4[1] << 16;
-    addr |= ip4[2] << 8;
-    addr |= ip4[0];
-    return addr;
-}
 
 
 int main(int argc, char const *argv[])
@@ -89,11 +32,12 @@ int main(int argc, char const *argv[])
 //        std::cout << ip4_vec;
 
         // TODO reverse lexicographically sort
-        std::sort(ip4_vec.begin(), ip4_vec.end(),
-                  [](const ip4_t &ip1, const ip4_t &ip2) {
-                      return to_number(ip1) > to_number(ip2);
-                  });
+//        std::sort(ip4_vec.begin(), ip4_vec.end(),
+//                  [](const ip4_t &ip1, const ip4_t &ip2) {
+//                      return to_number(ip1) > to_number(ip2);
+//                  });
 
+        sort(ip4_vec);
         std::cout << ip4_vec;
 
         // 222.173.235.246
@@ -106,11 +50,13 @@ int main(int argc, char const *argv[])
 
         // TODO filter by first byte and output
         // ip = filter(1)
-        for (const auto& ip4 : ip4_vec) {
-            if (ip4[0] == 1) {
-                std::cout << ip4 << std::endl;
-            }
-        }
+        auto ip4_vec2 = filter(ip4_vec, 1);
+        std::cout << ip4_vec2;
+//        for (const auto& ip4 : ip4_vec) {
+//            if (ip4[0] == 1) {
+//                std::cout << ip4 << std::endl;
+//            }
+//        }
 
         // 1.231.69.33
         // 1.87.203.225
@@ -120,11 +66,13 @@ int main(int argc, char const *argv[])
 
         // TODO filter by first and second bytes and output
         // ip = filter(46, 70)
-        for (const auto& ip4 : ip4_vec) {
-            if (ip4[0] == 46 && ip4[1] == 70) {
-                std::cout << ip4 << std::endl;
-            }
-        }
+        auto ip4_vec3 = filter(ip4_vec, 46,70);
+        std::cout << ip4_vec3;
+//        for (const auto& ip4 : ip4_vec) {
+//            if (ip4[0] == 46 && ip4[1] == 70) {
+//                std::cout << ip4 << std::endl;
+//            }
+//        }
 
         // 46.70.225.39
         // 46.70.147.26
@@ -133,14 +81,16 @@ int main(int argc, char const *argv[])
 
         // TODO filter by any byte and output
         // ip = filter_any(46)
-        for (const auto& ip4 : ip4_vec) {
-            for (auto v : ip4) {
-                if (v == 46) {
-                    std::cout << ip4 << std::endl;
-                    break;
-                }
-            }
-        }
+        auto ip4_vec4 = filter_any(ip4_vec, 46);
+        std::cout << ip4_vec4;
+//        for (const auto& ip4 : ip4_vec) {
+//            for (auto v : ip4) {
+//                if (v == 46) {
+//                    std::cout << ip4 << std::endl;
+//                    break;
+//                }
+//            }
+//        }
 
         // 186.204.34.46
         // 186.46.222.194
