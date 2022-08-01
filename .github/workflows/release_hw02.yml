@@ -22,9 +22,6 @@ jobs:
           cmake --build .
           cmake --build . --target test
           cmake --build . --target package
-      - name: Get version
-        id: get_version
-        run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
       - name: Create Release
         id: create_release
         uses: ncipollo/release-action@v1
@@ -33,6 +30,7 @@ jobs:
           draft: false
           prerelease: false
           token: ${{ secrets.GITHUB_TOKEN }}
+          tag:  ${{ github.run_number }}
           allowUpdates: true
       - name: check files in repo
         run: |
