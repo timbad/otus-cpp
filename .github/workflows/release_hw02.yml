@@ -6,6 +6,11 @@ on:
       - master
     paths:
       - 'hw02/**'
+  workflow_dispatch:
+    inputs:
+      message:
+        description: "Message for build"
+        required: true
 
 jobs:
   build:
