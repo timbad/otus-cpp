@@ -34,7 +34,7 @@ int main(int, char const* [])
 
     {
         // создание экземпляра std::map<int, int> с новым аллокатором, ограниченным 10 элементами
-        std::map<int, int, std::less<int>, my_allocator_t<int, n>> m;
+        std::map<int, int, std::less<int>, my_allocator_t<std::pair<const int, int>, n>> m;
         // заполнение 10 элементами, где ключ - это число от 0 до 9, а значение - факториал ключа
         for (int i = 0; i < n; i++) {
             m[i] = fact(i);
