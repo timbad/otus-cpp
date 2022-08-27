@@ -34,7 +34,7 @@ int main(int, char const* [])
 
     {
         // создание экземпляра std::map<int, int> с новым аллокатором, ограниченным 10 элементами
-        std::map<int, int, std::less<int>, my_allocator_t<std::pair<const int, int>, n>> m;
+        std::map<int, int, std::less<>, my_allocator_t<std::pair<const int, int>, n>> m;
         // заполнение 10 элементами, где ключ - это число от 0 до 9, а значение - факториал ключа
         for (int i = 0; i < n; i++) {
             m[i] = fact(i);
@@ -47,17 +47,25 @@ int main(int, char const* [])
 
     {
         // создание экземпляра своего контейнера для хранения значений типа int
-
+        my_list_t<int> my_list;
         // заполнение 10 элементами от 0 до 9
+        for(int i = 0; i < n; i++) {
+            my_list.push_back(i);
+        }
     }
 
     {
         // создание экземпляра своего контейнера для хранения значений типа int с новым аллокатором,
         // ограниченным 10 элементами
-
+        my_list_t<int, my_allocator_t<int, n>> my_list;
         // заполнение 10 элементами от 0 до 9
-
+        for(int i = 0; i < n; i++) {
+            my_list.push_back(i);
+        }
         // вывод на экран всех значений, хранящихся в контейнере
-
+        for (auto it = my_list.begin(); it != my_list.end(); ++it) {
+            std::cout << it->value_ << " ";
+        }
+        std::cout << "\n";
     }
 }

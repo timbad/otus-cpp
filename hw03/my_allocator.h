@@ -21,12 +21,26 @@ public:
         using other = my_allocator_t<U, N>;
     };
 
+    my_allocator_t() = default;
+    ~my_allocator_t() {
+        if (buffer_) {
+            std::free(buffer_);
+        }
+    }
+
     bool operator == (const my_allocator_t<T, N>&) { return false; }
     bool operator != (const my_allocator_t<T, N>&) { return true; }
 
     pointer allocate(size_t n) {
         if (n == 0) {
             return nullptr;
+        }
+        if (!buffer_) {
+            buffer_ = reinterpret_cast<T*>(std::malloc(N * sizeof(T)));
+            if (!buffer_) {
+                std::cerr << "my_allocator_t failed to allocate memory!\n";
+                throw std::bad_alloc();
+            }
         }
         if (offset_ + n > N) {
             throw std::bad_alloc();
@@ -50,6 +64,6 @@ public:
     }
 
 private:
-    std::array<T, N> buffer_;
+    T* buffer_{nullptr};
     size_t offset_{0};
 };
