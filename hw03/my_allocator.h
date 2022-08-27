@@ -36,22 +36,32 @@ public:
             return nullptr;
         }
         if (!buffer_) {
-            buffer_ = reinterpret_cast<T*>(std::malloc(N * sizeof(T)));
+            capacity_ = N;
+            auto old_buffer = buffer_;
+            buffer_ = reinterpret_cast<T*>(std::malloc(capacity_ * sizeof(T)));
             if (!buffer_) {
                 std::cerr << "my_allocator_t failed to allocate memory!\n";
+                if (old_buffer) { std::free(old_buffer); }
                 throw std::bad_alloc();
             }
         }
-        if (offset_ + n > N) {
-            throw std::bad_alloc();
+        if (size_ + n > capacity_) {
+            capacity_ = 2 * N;
+            auto old_buffer = buffer_;
+            buffer_ = reinterpret_cast<T*>(std::realloc(buffer_, capacity_ * sizeof(T)));
+            if (!buffer_) {
+                std::cerr << "my_allocator_t failed to reallocate memory!\n";
+                if (old_buffer) { std::free(old_buffer); }
+                throw std::bad_alloc();
+            }
         }
-        pointer cur_ptr = &buffer_[offset_];
-        offset_ += n;
+        pointer cur_ptr = &buffer_[size_];
+        size_ += n;
         return cur_ptr;
     }
 
     void deallocate(pointer, size_t n) {
-        offset_ -= std::min(offset_, n);
+        size_ -= std::min(size_, n);
     }
 
     template<typename U, typename ...Args>
@@ -65,5 +75,6 @@ public:
 
 private:
     T* buffer_{nullptr};
-    size_t offset_{0};
+    size_t size_{0};
+    size_t capacity_{0};
 };
