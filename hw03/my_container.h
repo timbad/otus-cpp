@@ -18,17 +18,17 @@ public:
     public:
         using iterator_category = std::forward_iterator_tag;
         using difference_type = std::ptrdiff_t;
-        using value_type = node_t;
-        using pointer = node_t*;
-        using reference = node_t&;
+        using value_type = T;
+        using pointer = T*;
+        using reference = T&;
 
-        explicit iterator_t(pointer ptr): ptr_(ptr) {}
+        explicit iterator_t(node_t* ptr): ptr_(ptr) {}
 
         reference operator*() const {
-            return *ptr_->value_;
+            return ptr_->value_;
         }
         pointer operator->() {
-            return ptr_;
+            return &ptr_->value_;
         }
         iterator_t& operator++() {
             ptr_ = ptr_->next_;
@@ -36,13 +36,13 @@ public:
         }
         iterator_t operator++(int) {
             iterator_t tmp = *this;
-            ++(*this);
+            ptr_ = ptr_->next_;
             return tmp;
         }
         friend bool operator!=(const iterator_t& lhs, const iterator_t& rhs) { return lhs.ptr_ != rhs.ptr_; }
         friend bool operator==(const iterator_t& lhs, const iterator_t& rhs) { return lhs.ptr_ == rhs.ptr_; }
     private:
-        pointer ptr_;
+        node_t* ptr_;
     };
 
     my_list_t() = default;

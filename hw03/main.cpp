@@ -60,12 +60,19 @@ int main(int, char const* [])
         my_list_t<int, my_allocator_t<int, n>> my_list;
         // заполнение 10 элементами от 0 до 9
         for(int i = 0; i < n; i++) {
+//        for(int i = 0; i < 20; i++) {  // реаллокация сработает на 10 элементе
             my_list.push_back(i);
         }
         // вывод на экран всех значений, хранящихся в контейнере
+#if 0
         for (auto it = my_list.begin(); it != my_list.end(); ++it) {
-            std::cout << it->value_ << " ";
+            std::cout << *it << " ";
         }
+#else
+        for (auto i : my_list) {
+            std::cout << i << " ";
+        }
+#endif
         std::cout << "\n";
     }
 }
