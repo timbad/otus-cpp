@@ -37,21 +37,17 @@ public:
         }
         if (!buffer_) {
             capacity_ = N;
-            auto old_buffer = buffer_;
             buffer_ = reinterpret_cast<T*>(std::malloc(capacity_ * sizeof(T)));
             if (!buffer_) {
                 std::cerr << "my_allocator_t failed to allocate memory!\n";
-                if (old_buffer) { std::free(old_buffer); }
                 throw std::bad_alloc();
             }
         }
-        if (size_ + n > capacity_) {
+        else if (size_ + n > capacity_) {
             capacity_ = 2 * N;
-            auto old_buffer = buffer_;
             buffer_ = reinterpret_cast<T*>(std::realloc(buffer_, capacity_ * sizeof(T)));
             if (!buffer_) {
                 std::cerr << "my_allocator_t failed to reallocate memory!\n";
-                if (old_buffer) { std::free(old_buffer); }
                 throw std::bad_alloc();
             }
         }
