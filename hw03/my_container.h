@@ -53,6 +53,7 @@ public:
         *this = rhs;
     }
     my_list_t& operator=(const my_list_t<T, allocator_t>& rhs) {
+        clear();
         for (auto it = rhs.begin(); it != rhs.end(); ++it) {
             push_back(*it);
         }
@@ -63,15 +64,19 @@ public:
     iterator_t begin() const { return iterator_t(head_); }
     iterator_t end() const { return iterator_t(nullptr); }
 
-    T& front() const { return *head_->value_; }
-    T& back() const { return *tail_->value_; }
+    T& front() const { return head_->value_; }
+    T& back() const { return tail_->value_; }
 
     bool empty() const {
         return !head_;
     }
 
     size_t size() const {
-        return head_ ? static_cast<size_t>(tail_ - head_) : 0;
+        size_t n = 0;
+        for (auto it = begin(); it != end(); ++it) {
+            n++;
+        }
+        return n;
     }
 
     void push_back(const T& value) {
@@ -98,13 +103,13 @@ public:
     }
 
     void clear() {
-        auto cur = head_;
-        while (cur != nullptr) {
-            auto next = cur->next_;
+        size_t n = 0;
+        for (auto cur = head_; cur != nullptr; cur = cur->next_, n++) {
             allocator_.destroy(cur);
-            allocator_.deallocate(cur, 1);
-            cur = next;
         }
+        allocator_.deallocate(head_, n);
+        head_ = nullptr;
+        tail_ = nullptr;
     }
 
 private:
