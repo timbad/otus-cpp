@@ -26,7 +26,7 @@ jobs:
         id: create_release
         uses: ncipollo/release-action@v1
         with:
-          name: Release ${{ steps.get_version.outputs.VERSION }}
+          name: hw02 release ${{ steps.get_version.outputs.VERSION }}
           draft: false
           prerelease: false
           token: ${{ secrets.GITHUB_TOKEN }}
